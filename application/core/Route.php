@@ -74,13 +74,8 @@ class Route
         }
 
         if(App::currentDateTime()->getTimestamp() > $miniLink->getLifeTime()){
-            return null;
+            Route::ErrorPage404();
         }
-
-//        d([
-//            'if',
-//            $miniLink
-//        ]);
 
         $ClickLink = (new ClickLink())
             ->setMiniLinkId($miniLinkRepository->getLastId())
@@ -93,11 +88,6 @@ class Route
         <script type="text/javascript">
           document.location.replace("'.$miniLink->getOriginalLink().'");
         </script>';
-//
-//        (new ClickLinkRepository())->push($ClickLink);
-//        header("Status: 302");
-//        header('Location: ' . $miniLink->getOriginalLink(), TRUE, 301);
-//        exit;
     }
 
     private function declareClass($className, $direction): ? bool
