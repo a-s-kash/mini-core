@@ -72,8 +72,8 @@ class Route
         if(!$miniLink = $miniLinkRepository->findByMinimizedLinkKey($minimizedLinkKey)){
             return null;
         }
-
-        if(App::currentDateTime()->getTimestamp() > $miniLink->getLifeTime()){
+//d((new \DateTime())->getTimestamp() > $miniLink->getLifeTime());
+        if((new \DateTime())->getTimestamp() > $miniLink->getLifeTime()){
             Route::ErrorPage404();
         }
 
@@ -88,6 +88,11 @@ class Route
         <script type="text/javascript">
           document.location.replace("'.$miniLink->getOriginalLink().'");
         </script>';
+
+//        (new ClickLinkRepository())->push($ClickLink);
+//        header("Status: 302");
+//        header('Location: ' . $miniLink->getOriginalLink(), TRUE, 301);
+//        exit;
     }
 
     private function declareClass($className, $direction): ? bool
@@ -128,9 +133,9 @@ class Route
 
     public static function ErrorPage404(): void
     {
-        $host = 'http://' . $_SERVER['HTTP_HOST'] . '/error-page/404';
-        header('HTTP/1.1 404 Not Found');
-        header("Status: 404 Not Found");
-        header("Location: " . $host);
+        echo '
+        <script type="text/javascript">
+          document.location.replace("/error-page/404");
+        </script>';
     }
 }

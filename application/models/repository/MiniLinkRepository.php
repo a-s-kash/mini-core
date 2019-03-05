@@ -12,7 +12,7 @@ class MiniLinkRepository extends Repository
     {
         $query = $this->makeSelectQuery([
             "minimized_link_key = '$linkKey'",
-            'life_time > ' . App::currentDateTime()->getTimestamp()
+            //'life_time > ' . App::currentDateTime()->getTimestamp()
         ]);
 
         if(!$response = $this->queryOne($query)){
