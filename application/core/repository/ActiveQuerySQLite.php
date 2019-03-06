@@ -40,7 +40,7 @@ class ActiveQuerySQLite {
     {
         $res = $this->sqlite->query($query);
         if ( !$res ){
-            throw new \Exception($this->sqlite->lastErrorMsg());
+            new \Exception($this->sqlite->lastErrorMsg());
         }
         return $res;
     }

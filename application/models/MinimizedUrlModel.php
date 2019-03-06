@@ -29,7 +29,7 @@ class MinimizedUrlModel extends Model
 
         return $this->keyGeneration(array_reverse(explode("-", $minimizedLinkKey)));
     }
-
+//!$miniLink = $MiniLinkRepository->findAll(["original_link = '$originalLink'"])[0]
     private function keyGeneration(array $miniLinkKeyArray, $recursion = 0): ? string
     {
         switch ($recursion){
