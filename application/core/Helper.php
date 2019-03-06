@@ -22,7 +22,7 @@ class Helper
     public function checkLink(string $link, int $recursion = 0, string $oldLink = ''): ? string
     {
         if (!function_exists('get_headers')) {
-            //echo "<s>get_headers</s>";
+            echo "<s>!function_exists get_headers</s>";
             return null;
         }
 
