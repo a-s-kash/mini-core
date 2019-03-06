@@ -49,7 +49,7 @@ class MinimizedUrlController extends core\Controller
             return null;
         }
 
-        if(!$originalLink = App::helper()->checkLink($post['original_link'])){
+        if(!$originalLink = App::helper()->checkLink(trim($post['original_link']))){
             $this->errors[] = 'битая ссылка';
             return null;
         }
