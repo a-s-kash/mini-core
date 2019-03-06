@@ -16,6 +16,16 @@
         <?php if($minimizedLink): ?>
             <p><?= $minimizedLink ?></p>
         <?php endif; ?>
+
+        <?php if($errors): ?>
+
+            <p>ВНИМАНИЕ:</p>
+            <ul>
+                <?php foreach ($errors as $error): ?>
+                    <li style="color: rgba(143,0,0,0.78);"><?= $error ?></li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
     </div>
 
 
@@ -23,3 +33,6 @@
         <h3><a href="/minimized-url/statistics-following">Статистика переходов по ссылкам</a></h3>
     </div>
 </div>
+
+<p style="font-size: 0.55em;
+    padding: 20px;">version: 0.91</p>
