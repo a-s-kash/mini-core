@@ -24,7 +24,7 @@
         <th scope="col">Оригинальная ссылка</th>
         <th scope="col">Минимизированная ссылка</th>
         <th scope="col">Доступна до</th>
-        <th scope="col">Количетво переходов</th>
+        <th scope="col">Количество переходов</th>
     </tr>
     </thead>
     <tbody>
