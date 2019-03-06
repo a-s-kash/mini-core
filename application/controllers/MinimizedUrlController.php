@@ -66,19 +66,22 @@ class MinimizedUrlController extends core\Controller
 
         /** @var MiniLink $miniLink */
         if(!$miniLink = $MiniLinkRepository->findAll(["original_link = '$originalLink'"])[0]){
-            $miniLink = (new MiniLink())
-                ->setOriginalLink($originalLink)
-                ->setMinimizedLinkKey($newMiniLinkKey)
-                ->setLifeTime($linkLifeTime->getTimestamp())
-            ;
 
-            $MiniLinkRepository->push($miniLink);
-        } else if($linkLifeTime->getTimestamp() > $miniLink->getLifeTime()){
+            $miniLink = new MiniLink();
             $MiniLinkRepository->push($miniLink
                 ->setOriginalLink($originalLink)
                 ->setMinimizedLinkKey($newMiniLinkKey)
                 ->setLifeTime($linkLifeTime->getTimestamp())
             );
+
+        } else if($linkLifeTime->getTimestamp() > $miniLink->getLifeTime()){
+
+            $MiniLinkRepository->push($miniLink
+                ->setOriginalLink($originalLink)
+                ->setMinimizedLinkKey($newMiniLinkKey)
+                ->setLifeTime($linkLifeTime->getTimestamp())
+            );
+
         }
 
         return $miniLink->makeMinimizedLink();
