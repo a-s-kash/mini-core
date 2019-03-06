@@ -37,17 +37,20 @@ class Helper
                 $newLink = explode('/', $link);
                 $newLink[2] = 'www.' . $newLink[2];
                 $newLink = implode('/', $newLink);
-                return $this->checkLink($newLink, ++$recursion, $link);
+                $oldLink = $link;
+                break;
             case 1:
                 $newLink = str_replace('http:', 'https:', $oldLink);
-                return $this->checkLink($newLink, ++$recursion, $oldLink);
+                break;
             case 2:
                 $newLink = explode('/', $link);
                 $newLink[2] = 'www.' . $newLink[2];
                 $newLink = implode('/', $newLink);
-                return $this->checkLink($newLink, ++$recursion, $oldLink);
+                break;
             default :
                 return null;
         }
+
+        return $this->checkLink($newLink, ++$recursion, $oldLink);
     }
 }
