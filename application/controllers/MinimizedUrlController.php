@@ -57,9 +57,6 @@ class MinimizedUrlController extends core\Controller
         $post_original_link = implode('/', $post_original_link);
 
         if(!$originalLink = App::helper()->checkLink(trim($post_original_link))){
-            d([
-                $originalLink
-            ]);
             $this->errors[] = 'битая ссылка';
             return null;
         }
