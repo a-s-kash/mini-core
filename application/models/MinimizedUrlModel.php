@@ -15,9 +15,6 @@ class MinimizedUrlModel extends Model
     /** @var MiniLinkRepository  */
     private $miniLinkRepository;
 
-    /** @var array */
-    private $miniLinkKeyArray = [];
-
     public function __construct()
     {
         $this->alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
@@ -30,22 +27,25 @@ class MinimizedUrlModel extends Model
         $miniLink = $this->miniLinkRepository->getLastRecord();
         $minimizedLinkKey = $miniLink ? $miniLink->getMinimizedLinkKey() : $this->defaultKey;
 
-        $this->miniLinkKeyArray = array_reverse(explode("-", $minimizedLinkKey));
-
-        if($this->increaseByOne($this->miniLinkKeyArray[0])){
-            return $this->returnNewMiniLinkKey();
+        return $this->keyGeneration(array_reverse(explode("-", $minimizedLinkKey)));
+    }
+//!$miniLink = $MiniLinkRepository->findAll(["original_link = '$originalLink'"])[0]
+    private function keyGeneration(array $miniLinkKeyArray, $recursion = 0): ? string
+    {
+        switch ($recursion){
+            case 0;
+            case 1:
+                if(!$this->increaseByOne($miniLinkKeyArray[$recursion])){
+                    $miniLinkKeyArray[$recursion] = $this->alphabet[0];
+                    return $this->keyGeneration($miniLinkKeyArray, ++$recursion);
+                }
+                break;
+            default :
+                $miniLinkKeyArray[$recursion]++;
+                break;
         }
 
-        $this->miniLinkKeyArray[0] = $this->alphabet[0];
-
-        if($this->increaseByOne($this->miniLinkKeyArray[1])){
-            return $this->returnNewMiniLinkKey();
-        }
-
-        $this->miniLinkKeyArray[1] = $this->alphabet[0];
-        $this->miniLinkKeyArray[2]++;
-
-        return $this->returnNewMiniLinkKey();
+        return implode('-', array_reverse($miniLinkKeyArray));
     }
 
     private function increaseByOne(string &$letter): bool
@@ -57,10 +57,5 @@ class MinimizedUrlModel extends Model
         $key = array_search($letter, $this->alphabet);
         $letter = $this->alphabet[++$key];
         return true;
-    }
-
-    private function returnNewMiniLinkKey(): string
-    {
-        return implode('-', array_reverse($this->miniLinkKeyArray));
     }
 }

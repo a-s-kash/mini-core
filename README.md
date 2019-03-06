@@ -4,4 +4,4 @@
 - Язык реализации php7.1
 - db - SQLite3
 
-######version: 0.93
+######version: 0.95

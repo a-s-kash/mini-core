@@ -27,25 +27,25 @@ class Helper
         }
 
         $check_url = get_headers($link);
+        //$file_headers = @get_headers($link);
 
-        if(strpos($check_url[0],'200')){
+        if(!(!$check_url || strpos($check_url[0],'404'))){
             return $link;
         }
 
         switch ($recursion){
             case 0:
-                $newLink = explode('/', $link);
-                $newLink[2] = 'www.' . $newLink[2];
-                $newLink = implode('/', $newLink);
                 $oldLink = $link;
+                $newLink = $link;
+                preg_match('(www.)', $link, $matches);
+                if(!$matches){
+                    $newLink = explode('/', $link);
+                    $newLink[2] = 'www.' . $newLink[2];
+                    $newLink = implode('/', $newLink);
+                }
                 break;
             case 1:
-                $newLink = str_replace('http:', 'https:', $oldLink);
-                break;
-            case 2:
-                $newLink = explode('/', $link);
-                $newLink[2] = 'www.' . $newLink[2];
-                $newLink = implode('/', $newLink);
+                $newLink = str_replace('http:', 'https:', $link);
                 break;
             default :
                 return null;
@@ -53,4 +53,9 @@ class Helper
 
         return $this->checkLink($newLink, ++$recursion, $oldLink);
     }
+
+//    private function url_exists($url) {
+//        if (!$fp = curl_init($url)) return false;
+//        return true;
+//    }
 }
