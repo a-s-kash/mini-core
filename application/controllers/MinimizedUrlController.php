@@ -49,12 +49,12 @@ class MinimizedUrlController extends core\Controller
             return null;
         }
 
-        if(!App::helper()->checkLink($post['original_link'])){
+        if(!$originalLink = App::helper()->checkLink($post['original_link'])){
             $this->errors[] = 'битая ссылка';
             return null;
         }
 
-        $originalLink = addslashes($post['original_link']);
+        $originalLink = addslashes($originalLink);
 
         $linkLifeTime = new DateTime($post['life_time'], new \DateTimeZone(App::config()->getParams('date_time_zone')));
 

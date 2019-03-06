@@ -19,14 +19,35 @@ class Helper
         return $this->config->getParams('app_patch') . $path;
     }
 
-    public function checkLink(string $link): bool
+    public function checkLink(string $link, int $recursion = 0, string $oldLink = ''): ? string
     {
-        if (function_exists('get_headers'))
-        {
-            $check_url = get_headers($link);
-            return strpos($check_url[0],'200');
-        } //else echo "<s>get_headers</s>";
+        if (!function_exists('get_headers')) {
+            //echo "<s>get_headers</s>";
+            return null;
+        }
 
-        return false;
+        $check_url = get_headers($link);
+
+        if(strpos($check_url[0],'200')){
+            return $link;
+        }
+
+        switch ($recursion){
+            case 0:
+                $newLink = explode('/', $link);
+                $newLink[2] = 'www.' . $newLink[2];
+                $newLink = implode('/', $newLink);
+                return $this->checkLink($newLink, ++$recursion, $link);
+            case 1:
+                $newLink = str_replace('http:', 'https:', $oldLink);
+                return $this->checkLink($newLink, ++$recursion, $oldLink);
+            case 2:
+                $newLink = explode('/', $link);
+                $newLink[2] = 'www.' . $newLink[2];
+                $newLink = implode('/', $newLink);
+                return $this->checkLink($newLink, ++$recursion, $oldLink);
+            default :
+                return null;
+        }
     }
 }
