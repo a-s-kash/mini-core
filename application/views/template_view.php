@@ -11,7 +11,7 @@
 	<?php include \core\App::helper()->getPrepareAppPatch("views/$content_view") ?>
 
     <p style="font-size: 0.55em;
-        padding: 20px;">version: 0.91</p>
+        padding: 20px;">version: <?= \core\App::config()->getParams('app_version') ?></p>
 
     <script src="/js/jquery.min.js" type="text/javascript"></script>
     <script src="/js/tether.min.js" type="text/javascript"></script>
