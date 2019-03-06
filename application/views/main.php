@@ -33,6 +33,3 @@
         <h3><a href="/minimized-url/statistics-following">Статистика переходов по ссылкам</a></h3>
     </div>
 </div>
-
-<p style="font-size: 0.55em;
-    padding: 20px;">version: 0.91</p>
