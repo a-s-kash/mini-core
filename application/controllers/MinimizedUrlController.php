@@ -58,14 +58,14 @@ class MinimizedUrlController extends core\Controller
 
         $linkLifeTime = new DateTime($post['life_time'], new \DateTimeZone(App::config()->getParams('date_time_zone')));
 
-        $newMiniLinkKey = (new MinimizedUrlModel())
-            ->makeNewMinimizedKey()
-        ;
-
         $MiniLinkRepository = new MiniLinkRepository();
 
         /** @var MiniLink $miniLink */
         if(!$miniLink = $MiniLinkRepository->findAll(["original_link = '$originalLink'"])[0]){
+
+            $newMiniLinkKey = (new MinimizedUrlModel())
+                ->makeNewMinimizedKey()
+            ;
 
             $miniLink = new MiniLink();
             $MiniLinkRepository->push($miniLink
@@ -77,8 +77,6 @@ class MinimizedUrlController extends core\Controller
         } else if($linkLifeTime->getTimestamp() > $miniLink->getLifeTime()){
 
             $MiniLinkRepository->push($miniLink
-                ->setOriginalLink($originalLink)
-                ->setMinimizedLinkKey($newMiniLinkKey)
                 ->setLifeTime($linkLifeTime->getTimestamp())
             );
 
