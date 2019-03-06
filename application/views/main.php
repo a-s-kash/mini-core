@@ -3,7 +3,7 @@
         <h2>Минификация ссылки</h2>
         <form action="/minimized-url" method="post">
             <p>
-                <input type="text" style="width: 375px;" placeholder="Вставте ссылку" required name="MinimizedUrl[original_link]"/>
+                <input type="url" style="width: 375px;" placeholder="Вставте ссылку" required name="MinimizedUrl[original_link]"/>
             </p>
 
             <p>
