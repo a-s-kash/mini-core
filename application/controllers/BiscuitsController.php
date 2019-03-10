@@ -23,4 +23,17 @@ class BiscuitsController extends Controller
 
         ]);
     }
+
+    public function actionNew()
+    {
+        if($foreseeBiscuitsNew = $_POST['foreseeBiscuitsNew']){
+            d([
+                $foreseeBiscuitsNew
+            ]);
+        }
+
+        $this->view->generate('foresee_biscuits_new', [
+
+        ]);
+    }
 }
