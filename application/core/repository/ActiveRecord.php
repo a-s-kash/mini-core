@@ -12,6 +12,9 @@ class ActiveRecord extends ActiveQuerySQLite
     /** @var EntityModel */
     protected $entityModelName;
 
+    /** @var Repository */
+    protected $repository;
+
     public function __construct()
     {
         $this->makeTableAndEntityName();
@@ -39,6 +42,16 @@ class ActiveRecord extends ActiveQuerySQLite
         $this->tableName = strtolower(
             implode('_', $incompleteTableName)
         );
+    }
+
+    public static function find()
+    {
+        d([
+//           "Self: " => get_class(self),
+//           "Parent: " => get_class(parent),
+//           "Derived: " => get_class(static)
+        ]);
+        return '';
     }
 
     protected function makeSelectQuery(array $data = null): string

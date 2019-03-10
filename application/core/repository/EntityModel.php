@@ -2,6 +2,10 @@
 
 namespace core\repository;
 
+use core\Route;
+use models\entity\PredictionMessageLog;
+use models\repository\PredictionMessageLogRepository;
+
 abstract class EntityModel
 {
     /**
@@ -34,7 +38,7 @@ abstract class EntityModel
         $this->attributes[$name] = $value;
     }
 
-    private function trace($text, $name): void
+    public static function trace($text, $name): void
     {
         $trace = debug_backtrace();
         $in_file = $trace[1]['file'];
@@ -51,7 +55,7 @@ abstract class EntityModel
     private function checkPropertyRule(string $propertyName): bool
     {
         if(!method_exists($this, 'get' . ucfirst($propertyName))){
-            $this->trace("Undefined property", $propertyName);
+            self::trace("Undefined property", $propertyName);
         }
 
         return true;
@@ -72,5 +76,25 @@ abstract class EntityModel
         }
 
         return $properties;
+    }
+
+    public static function repository(): Repository
+    {
+        static $repositories = [];
+
+        $entityModelName = array_pop(
+            explode('\\', get_called_class())
+        );
+
+        if(!$repositories[$entityModelName]){
+            $repository = 'models\\repository\\' . $entityModelName . 'Repository';
+            if(class_exists($repository)) {
+                $repositories[$entityModelName] = new $repository;
+            } else {
+                self::trace('Don`t found entity model', $repository);
+            }
+        }
+
+        return $repositories[$entityModelName];
     }
 }
