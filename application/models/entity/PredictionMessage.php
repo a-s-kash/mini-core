@@ -2,10 +2,13 @@
 
 namespace models\entity;
 
+use core\App;
 use core\repository\EntityModel;
 
 class PredictionMessage extends EntityModel
 {
+    private $predictionMessageLogs = [];
+
     public function getId(): int
     {
         return $this->id;
@@ -16,9 +19,34 @@ class PredictionMessage extends EntityModel
         return $this->message;
     }
 
-    public function setMessage(string $message)
+    public function setMessage(string $message): self
     {
         $this->message = $message;
+
+        return $this;
+    }
+
+    public function addPredictionMessageLog(PredictionMessageLog $predictionMessageLog): self
+    {
+        if(!$this->id){
+            self::repository()->push($this);
+        }
+
+        d([
+            'PredictionMessage #3',
+            'check id',
+            $this,
+        ]);
+
+        PredictionMessageLog::repository()->push(
+            $predictionMessageLog
+                ->setPredictionMessageId($this)
+                ->setCookieTime(
+                    App::helper()->currentDateTime()
+                )
+        );
+
+        $this->predictionMessageLogs[] = $predictionMessageLog;
 
         return $this;
     }

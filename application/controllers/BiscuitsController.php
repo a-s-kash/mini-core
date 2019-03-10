@@ -7,6 +7,18 @@ class BiscuitsController extends Controller
     {
 
 
+
+        $log = (new \models\entity\PredictionMessageLog());
+
+        $message = (new \models\entity\PredictionMessage())
+            ->addPredictionMessageLog($log)
+        ;
+
+        d([
+            'BiscuitsController action Foresee',
+            $message,
+        ]);
+
         $this->view->generate('foresee_biscuits', [
 
         ]);

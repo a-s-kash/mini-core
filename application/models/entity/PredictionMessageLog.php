@@ -34,4 +34,31 @@ class PredictionMessageLog extends EntityModel
 
         return $this;
     }
+
+    public function getCookieTime(): \DateTime
+    {
+        return (new \DateTime())->setTimestamp($this->cookieTime);
+    }
+
+    public function setCookieTime(\DateTime $cookieTime): self
+    {
+        $this->cookieTime = $cookieTime;
+
+        return $this;
+    }
+
+    public function addPredictionMessageLog(PredictionMessageLog $predictionMessageLog): self
+    {
+
+        //(new PredictionMessageLogRepository())->push($predictionMessageLog);
+
+        return $this;
+    }
+
+    public function addVisitor(Visitor $visitor): self
+    {
+        (new VisitorRepository())->push($visitor);
+
+        return $this;
+    }
 }
