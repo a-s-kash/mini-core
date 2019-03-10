@@ -58,4 +58,9 @@ class Helper
 //        if (!$fp = curl_init($url)) return false;
 //        return true;
 //    }
+
+    public function currentDateTime(): ? \DateTime
+    {
+        return (new \DateTime('now', new \DateTimeZone(App::config()->getParams('date_time_zone'))));
+    }
 }

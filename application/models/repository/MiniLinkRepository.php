@@ -2,7 +2,6 @@
 
 namespace models\repository;
 
-use core\App;
 use core\repository\Repository;
 use models\entity\MiniLink;
 
