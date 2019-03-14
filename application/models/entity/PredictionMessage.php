@@ -26,6 +26,18 @@ class PredictionMessage extends EntityModel
         return $this;
     }
 
+    public function getCategoryId(): string
+    {
+        return $this->categoryId;
+    }
+
+    public function setCategoryId(PredictionCategory $category): self
+    {
+        $this->categoryId = $category->getId();
+
+        return $this;
+    }
+
     public function addPredictionMessageLog(PredictionMessageLog $predictionMessageLog): self
     {
         if(!$this->id){

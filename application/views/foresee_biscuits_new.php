@@ -9,5 +9,6 @@
 ?>
 
 <form method="post">
-    <textarea name="foreseeBiscuitsNew[message]"></textarea>
+    <textarea name="foreseeBiscuitsNew[message]" style="width: 500px;"></textarea>
+    <input type="submit">
 </form>
