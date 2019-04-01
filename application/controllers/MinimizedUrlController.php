@@ -26,6 +26,10 @@ class MinimizedUrlController extends core\Controller
 
     public function actionStatisticsFollowing()
     {
+        d([
+            'MinimizedUrlController actionStatisticsFollowing',
+            (new MiniLinkRepository)->findAll()
+        ]);
         $miniLinks = (new MiniLinkRepository)->findAll();
 
         /** @var MiniLink $miniLink */
