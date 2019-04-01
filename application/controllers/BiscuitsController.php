@@ -3,6 +3,7 @@
 use core\Controller;
 use models\entity\PredictionMessage;
 use models\entity\PredictionCategory;
+use core\repository\Repository;
 
 class BiscuitsController extends Controller
 {
@@ -13,13 +14,21 @@ class BiscuitsController extends Controller
 
 
         d([
-            PredictionCategory::repository()->push((new PredictionCategory())
-                ->setCategoryName('Послание с Венеры')
-            ),
+            'BiscuitsController',
+//            PredictionCategory::repository()->push((new PredictionCategory())
+//                ->setCategoryName('Послание с Венеры')
+//            ),
+//
+//            PredictionCategory::repository()->push((new PredictionCategory())
+//                ->setCategoryName('Совет на день')
+//            ),
 
-            PredictionCategory::repository()->push((new PredictionCategory())
-                ->setCategoryName('Совет на день')
-            ),
+            PredictionCategory::repository()
+                ->find()
+                ->all()
+            ,
+
+//        \core\repository\EntityModel::repository()
         ]);
 
         $log = (new \models\entity\PredictionMessageLog());
