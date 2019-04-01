@@ -2,114 +2,40 @@
 
 namespace core\repository;
 
-use core\App;
+use core\db\DataBaseMySQL;
+use core\db\DataBaseSQLite;
+use core\db\DataBase;
+use core\query\{
+    QueryBuilder,
+    SelectQueryBuilder
+};
 
-class ActiveRecord extends ActiveQuerySQLite
+class ActiveRecord
 {
-    /** @var string */
-    protected $tableName;
+    /** @var Repository  */
+    private $repository;
 
-    /** @var EntityModel */
-    protected $entityModelName;
+    /** @var QueryBuilder */
+    private $selectQueryBuilder;
 
-    /** @var Repository */
-    protected $repository;
+    /** @var DataBase  */
+    private $dataBase;
 
-    public function __construct()
+    public function __construct(Repository $repository)
     {
-        $this->makeTableAndEntityName();
+        static $dataBases = [];
 
-        $dbPatch = App::config()->getParams('app_patch');
-        $dbPatch .= App::config()->getParams('db_patch');
-
-        parent::__construct($dbPatch);
-    }
-
-    private function makeTableAndEntityName(): void
-    {
-        preg_match_all(
-            '/[A-Z][^A-Z]*?/Usu',
-            array_pop(
-                explode('\\', get_called_class())
-            ),
-            $incompleteTableName
-        );
-
-        $incompleteTableName = array_slice($incompleteTableName[0], 0,-1);
-
-        $this->entityModelName = 'models\\entity\\' . implode('', $incompleteTableName);
-
-        $this->tableName = strtolower(
-            implode('_', $incompleteTableName)
-        );
-    }
-
-    public static function find()
-    {
-        d([
-//           "Self: " => get_class(self),
-//           "Parent: " => get_class(parent),
-//           "Derived: " => get_class(static)
-        ]);
-        return '';
-    }
-
-    protected function makeSelectQuery(array $data = null): string
-    {
-        if(!$this->tableName){
-            d('makeSelectQuery');
+        if(!$this->dataBase = $dataBases[$repository->getDbSchemas()]) {
+            //$dataBases[$repository->getDbSchemas()] = $this->dataBase = new DataBaseSQLite($repository->getDbSchemas());
+            $dataBases['my-sql'] = $this->dataBase = new DataBaseMySQL();
         }
 
-        $where = $data ? implode(' AND ', $data) : 1;
-
-        return str_replace(
-            [
-                ':tableName',
-                ':1'
-            ],
-            [
-                $this->tableName,
-                $where
-            ],
-            "SELECT * FROM `:tableName` WHERE :1"
-        );
+        $this->repository = $repository;
+        $this->selectQueryBuilder = new SelectQueryBuilder($repository, $this->dataBase);
     }
 
-    public function createRecord(string $properties, string $values)
+    public function getSelectQueryBuilder(): SelectQueryBuilder
     {
-        $query = str_replace(
-            [
-                ':tableName',
-                ':properties',
-                ':values',
-            ],
-            [
-                $this->tableName,
-                $properties,
-                $values,
-            ],
-            "INSERT INTO `:tableName` (`:properties`) VALUES (':values')"
-        );
-
-        return $this->query($query);
-    }
-
-    public function updateRecord(string $propertiesSet, string $propertyWhere)
-    {
-        $query = str_replace(
-            [
-                ':tableName',
-                ':propertiesSet',
-                ':propertyWhere',
-            ],
-            [
-                $this->tableName,
-                $propertiesSet,
-                $propertyWhere,
-            ],
-            "UPDATE `:tableName` SET :propertiesSet WHERE :propertyWhere"
-        );
-
-        return $this->query($query);
+        return $this->selectQueryBuilder;
     }
 }
