@@ -5,9 +5,9 @@
 * @see http://7devs.com/code/view.php?id=67
 */
 
-namespace core\repository;
+namespace core\db;
 
-class ActiveQuerySQLite {
+class DataBaseSQLite implements DataBase{
 
     /** @var \SQLite3  */
     private $sqlite;
