@@ -1,4 +1,4 @@
-# mini-links
+# project mini-links
 тест: <a href="http://nimda.biz.ua/" target="_blank">`mini-links`</a>
 
 - MVC, singleton
