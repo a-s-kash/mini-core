@@ -1,6 +1,7 @@
 # mini-links
+тест: <a href="http://nimda.biz.ua/" target="_blank">`mini-links`</a>
 
-- MVC
+- MVC, singleton
 - Язык реализации php7.1
 - db - SQLite3
 
