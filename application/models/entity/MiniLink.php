@@ -77,7 +77,11 @@ class MiniLink extends EntityModel
     public function makeClickLinks(): void
     {
         if(!$this->clickLinks){
-            $this->clickLinks = (new ClickLinkRepository())->findAll(['mini_link_id = ' . $this->getId()]);
+            $this->clickLinks = ClickLink::repository()
+                ->find()
+                ->where('mini_link_id = ' . $this->getId())
+                ->all()
+            ;
         }
 
         $this->clickLinksCount = count($this->clickLinks);

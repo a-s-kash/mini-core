@@ -5,4 +5,4 @@
 - Язык реализации php7.1
 - db - SQLite3, MySql
 
-###### version: 1.25
+###### version: 1.28
