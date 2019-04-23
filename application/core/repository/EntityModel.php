@@ -32,7 +32,7 @@ abstract class EntityModel extends Model
         return $properties;
     }
 
-    public static function repository(): Repository
+    public static function repository(): MainRepository
     {
         static $repositories = [];
 

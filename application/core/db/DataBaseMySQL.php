@@ -33,11 +33,18 @@ class DataBaseMySQL implements DataBase
         @mysqli_close($this->mysqliConnect);
     }
 
-    public function queryAll(string $query)
+    public function query(string $query)
     {
         if (!$result = mysqli_query($this->mysqliConnect, $query)) {
             new \Exception("Ошибка: " . mysqli_error($this->mysqliConnect));
         }
+
+        return $result;
+    }
+
+    public function queryAll(string $query)
+    {
+        $result = $this->query($query);
 
         //$results = $result->fetch_object(PredictionCategory::class);
         $results = $result->fetch_all(MYSQLI_ASSOC);
@@ -47,11 +54,9 @@ class DataBaseMySQL implements DataBase
         return $results;
     }
 
-    public function queryOne(string $query, $entireRow = true): array
+    public function queryOne(string $query): array
     {
-        if (!$result = mysqli_query($this->mysqliConnect, $query)) {
-            new \Exception("Ошибка: " . mysqli_error($this->mysqliConnect));
-        }
+        $result = $this->query($query);
 
         $results = $result->fetch_assoc();
 

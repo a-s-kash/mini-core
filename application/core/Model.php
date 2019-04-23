@@ -22,13 +22,13 @@ abstract class Model
         }
     }
 
-    public function __get($name)
+    public function __get(string $name)
     {
         $this->checkPropertyRule($name);
         return $this->attributes[$name] ?? null;
     }
 
-    public function __set($name, $value): void
+    public function __set(string $name, $value): void
     {
         $this->checkPropertyRule($name);
         $this->attributes[$name] = $value;
@@ -37,6 +37,10 @@ abstract class Model
     public function getAttributes(): array
     {
         return $this->attributes;
+    }
+    public function __isset(string $name)
+    {
+        return method_exists($this, 'get' . ucfirst($name));
     }
 
     protected static function trace($text, $name, string $notice = null): void

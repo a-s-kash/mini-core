@@ -7,6 +7,8 @@
 
 namespace core\db;
 
+use core\App;
+
 class DataBaseSQLite implements DataBase{
 
     /** @var \SQLite3  */
@@ -20,10 +22,12 @@ class DataBaseSQLite implements DataBase{
      * @param $filename
      * @param int $mode
      */
-    public function __construct(string $filename, int $mode = 1)
+    public function __construct()
     {
-        $this->mode = $mode;
-        $this->sqlite = new \SQLite3($filename);
+        $this->mode = SQLITE3_ASSOC;
+        $this->sqlite = new \SQLite3(App::config()->getParams('app_patch')
+            . App::config()->getParams('db_patch')
+        );
     }
 
     public function __destruct()
@@ -57,9 +61,9 @@ class DataBaseSQLite implements DataBase{
         return $row;
     }
 
-    public function queryOne(string $query, $entireRow = true): array
+    public function queryOne(string $query): array
     {
-        return $this->sqlite->querySingle($query, $entireRow);
+        return $this->sqlite->querySingle($query, true);
     }
 
     public function queryAll(string $query)

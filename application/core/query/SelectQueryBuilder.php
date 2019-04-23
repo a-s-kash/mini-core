@@ -23,7 +23,7 @@ class SelectQueryBuilder implements QueryBuilder
     /** @var bool */
     private $asArray = false;
 
-    public function __construct(Repository $repository, DataBase $dataBase, $is = null)
+    public function __construct(Repository $repository, DataBase $dataBase)
     {
         $this->dataBase = $dataBase;
         $this->tableName = $repository->getTableName();
@@ -150,7 +150,7 @@ class SelectQueryBuilder implements QueryBuilder
 
         $entityModels = [];
         foreach($response as $value){
-            $entityModels[] = $this->makeEntityModel($value);
+            $entityModels[$value['id']] = $this->makeEntityModel($value);
         }
 
         return $entityModels;

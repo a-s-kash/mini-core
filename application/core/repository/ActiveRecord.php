@@ -2,40 +2,47 @@
 
 namespace core\repository;
 
+use core\db\DataBase;
 use core\db\DataBaseMySQL;
 use core\db\DataBaseSQLite;
-use core\db\DataBase;
-use core\query\{
-    QueryBuilder,
-    SelectQueryBuilder
-};
+use core\repository\traits\queryBuilderInsert;
+use core\repository\traits\queryBuilderSelect;
+use core\repository\traits\queryBuilderUpdate;
 
 class ActiveRecord
 {
-    /** @var Repository  */
-    private $repository;
+    const DATA_BASE_MYSQL = DataBaseMySQL::class;
+    const DATA_BASE_SQLITE = DataBaseSQLite::class;
 
-    /** @var QueryBuilder */
-    private $selectQueryBuilder;
-
-    /** @var DataBase  */
-    private $dataBase;
+    use queryBuilderInsert;
+    use queryBuilderSelect;
+    use queryBuilderUpdate;
 
     public function __construct(Repository $repository)
     {
-        static $dataBases = [];
+        static $dataBases = [
+            self::DATA_BASE_SQLITE,
+            self::DATA_BASE_MYSQL,
+        ];
 
-        if(!$this->dataBase = $dataBases[$repository->getDbSchemas()]) {
-            //$dataBases[$repository->getDbSchemas()] = $this->dataBase = new DataBaseSQLite($repository->getDbSchemas());
-            $dataBases['my-sql'] = $this->dataBase = new DataBaseMySQL();
+        if(is_bool($schemasKey = array_search($repository->getDbSchemas(), $dataBases))) {
+            $schemasKey = 0;
         }
 
+        $this->dataBase = new $dataBases[$schemasKey]();
         $this->repository = $repository;
-        $this->selectQueryBuilder = new SelectQueryBuilder($repository, $this->dataBase);
     }
 
-    public function getSelectQueryBuilder(): SelectQueryBuilder
-    {
-        return $this->selectQueryBuilder;
-    }
+//    public function getLastId(): ? int
+//    {
+//        return $this->getLastRecord()->id;
+//    }
+//
+//    public function getLastRecord(): ? EntityModel
+//    {
+//        $query = $this->makeSelectQuery();
+//        $query .= ' ORDER BY id DESC LIMIT 1';
+//        $response = $this->queryOne($query);
+//        return $response ? $this->makeEntityModel($response) : null;
+//    }
 }
