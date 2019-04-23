@@ -2,9 +2,11 @@
 
 namespace models\repository;
 
-use core\repository\Repository;
+use core\repository\ActiveRecord;
+use core\repository\MainRepository;
 
-class PredictionMessageLogRepository extends Repository
+class PredictionMessageLogRepository extends MainRepository
 {
-
+    /** @var string */
+//    protected $dbSchema = ActiveRecord::DATA_BASE_MYSQL;
 }

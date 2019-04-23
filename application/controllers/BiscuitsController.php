@@ -10,8 +10,13 @@ class BiscuitsController extends Controller
     public function actionForesee()
     {
 
+        $categories = PredictionCategory::repository()
+            ->find()
+            ->all()
+        ;
 
-
+        /** @var PredictionCategory $category */
+        $category = $categories[1];
 
         d([
             'BiscuitsController',
@@ -23,24 +28,27 @@ class BiscuitsController extends Controller
 //                ->setCategoryName('Совет на день')
 //            ),
 
-            PredictionCategory::repository()
-                ->find()
-                ->all()
-            ,
+            $category->addPredictionMessageInCategory(
+                (new PredictionMessage())
+                    ->setMessage('Сегодня избегайте черного цвета')
+            ),
+
+
+            $categories,
 
 //        \core\repository\EntityModel::repository()
         ]);
 
-        $log = (new \models\entity\PredictionMessageLog());
+//        $log = (new \models\entity\PredictionMessageLog());
+//
+//        $message = (new \models\entity\PredictionMessage())
+//            ->addPredictionMessageLog($log)
+//        ;
 
-        $message = (new \models\entity\PredictionMessage())
-            ->addPredictionMessageLog($log)
-        ;
-
-        d([
-            'BiscuitsController action Foresee',
-            $message,
-        ]);
+//        d([
+//            'BiscuitsController action Foresee',
+//            $message,
+//        ]);
 
         $this->view->generate('foresee_biscuits', [
 
