@@ -2,101 +2,47 @@
 
 namespace core\repository;
 
-use core\App;
+use core\db\DataBase;
+use core\db\DataBaseMySQL;
+use core\db\DataBaseSQLite;
+use core\repository\traits\queryBuilderInsert;
+use core\repository\traits\queryBuilderSelect;
+use core\repository\traits\queryBuilderUpdate;
 
-class ActiveRecord extends ActiveQuerySQLite
+class ActiveRecord
 {
-    /** @var string */
-    protected $tableName;
+    const DATA_BASE_MYSQL = DataBaseMySQL::class;
+    const DATA_BASE_SQLITE = DataBaseSQLite::class;
 
-    /** @var EntityModel */
-    protected $entityModelName;
+    use queryBuilderInsert;
+    use queryBuilderSelect;
+    use queryBuilderUpdate;
 
-    public function __construct()
+    public function __construct(Repository $repository)
     {
-        $this->makeTableAndEntityName();
+        static $dataBases = [
+            self::DATA_BASE_SQLITE,
+            self::DATA_BASE_MYSQL,
+        ];
 
-        $dbPatch = App::config()->getParams('app_patch');
-        $dbPatch .= App::config()->getParams('db_patch');
-
-        parent::__construct($dbPatch);
-    }
-
-    private function makeTableAndEntityName(): void
-    {
-        preg_match_all(
-            '/[A-Z][^A-Z]*?/Usu',
-            array_pop(
-                explode('\\', get_called_class())
-            ),
-            $incompleteTableName
-        );
-
-        $incompleteTableName = array_slice($incompleteTableName[0], 0,-1);
-
-        $this->entityModelName = 'models\\entity\\' . implode('', $incompleteTableName);
-
-        $this->tableName = strtolower(
-            implode('_', $incompleteTableName)
-        );
-    }
-
-    protected function makeSelectQuery(array $data = null): string
-    {
-        if(!$this->tableName){
-            d('makeSelectQuery');
+        if(is_bool($schemasKey = array_search($repository->getDbSchemas(), $dataBases))) {
+            $schemasKey = 0;
         }
 
-        $where = $data ? implode(' AND ', $data) : 1;
-
-        return str_replace(
-            [
-                ':tableName',
-                ':1'
-            ],
-            [
-                $this->tableName,
-                $where
-            ],
-            "SELECT * FROM `:tableName` WHERE :1"
-        );
+        $this->dataBase = new $dataBases[$schemasKey]();
+        $this->repository = $repository;
     }
 
-    public function createRecord(string $properties, string $values)
-    {
-        $query = str_replace(
-            [
-                ':tableName',
-                ':properties',
-                ':values',
-            ],
-            [
-                $this->tableName,
-                $properties,
-                $values,
-            ],
-            "INSERT INTO `:tableName` (`:properties`) VALUES (':values')"
-        );
-
-        return $this->query($query);
-    }
-
-    public function updateRecord(string $propertiesSet, string $propertyWhere)
-    {
-        $query = str_replace(
-            [
-                ':tableName',
-                ':propertiesSet',
-                ':propertyWhere',
-            ],
-            [
-                $this->tableName,
-                $propertiesSet,
-                $propertyWhere,
-            ],
-            "UPDATE `:tableName` SET :propertiesSet WHERE :propertyWhere"
-        );
-
-        return $this->query($query);
-    }
+//    public function getLastId(): ? int
+//    {
+//        return $this->getLastRecord()->id;
+//    }
+//
+//    public function getLastRecord(): ? EntityModel
+//    {
+//        $query = $this->makeSelectQuery();
+//        $query .= ' ORDER BY id DESC LIMIT 1';
+//        $response = $this->queryOne($query);
+//        return $response ? $this->makeEntityModel($response) : null;
+//    }
 }
