@@ -1,5 +1,4 @@
 # project mini-links
-тест: <a href="http://nimda.biz.ua/" target="_blank">`mini-links`</a>
 
 - MVC, Singleton
 - Язык реализации php7.1
