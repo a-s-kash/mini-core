@@ -2,65 +2,23 @@
 
 namespace core\repository;
 
-abstract class EntityModel
+use core\Model;
+
+abstract class EntityModel extends Model
 {
-    /**
-     * @var array
-     */
-    private $attributes = [];
-
-    public function loadingData(array $data): void
-    {
-        foreach ($data as $property => $val){
-
-            if(is_array($val)){
-                continue;
-            }
-
-            $this->checkPropertyRule($property);
-            $this->attributes[$property] = $val;
-        }
-    }
-
-    public function __get($name)
-    {
-        $this->checkPropertyRule($name);
-        return $this->attributes[$name] ?? null;
-    }
+    abstract public function getId(): ? int;
 
     public function __set($name, $value): void
     {
-        $this->checkPropertyRule($name);
-        $this->attributes[$name] = $value;
-    }
-
-    private function trace($text, $name): void
-    {
-        $trace = debug_backtrace();
-        $in_file = $trace[1]['file'];
-        $in_line = $trace[1]['line'];
-        trigger_error(
-            "
-                <p>$text: <b>\"$name\"</b> on line <b>$in_line</b></p>
-                <p>in $in_file</p>
-                ",
-            E_USER_NOTICE);
-        exit;
-    }
-
-    private function checkPropertyRule(string $propertyName): bool
-    {
-        if(!method_exists($this, 'get' . ucfirst($propertyName))){
-            $this->trace("Undefined property", $propertyName);
-        }
-
-        return true;
+        $name = str_replace('_', '', lcfirst(ucwords($name, '_')));
+        parent::__set($name, $value);
     }
 
     public function getProperties(): array
     {
         $properties = [];
-        foreach ($this->attributes as $propertyName => $val){
+        $attributes = $this->getAttributes();
+        foreach ($attributes as $propertyName => $val){
             preg_match_all(
                 '/[A-Z][^A-Z]*?/Usu',
                 ucfirst($propertyName),
@@ -72,5 +30,30 @@ abstract class EntityModel
         }
 
         return $properties;
+    }
+
+    public static function repository(): MainRepository
+    {
+        static $repositories = [];
+
+        if(get_class() == get_called_class()){
+            self::trace('Cannot be used this mode', get_called_class(), 'Need to be called via late static binding!');
+        }
+
+        $entityModelName = array_pop(
+            explode('\\', get_called_class())
+        );
+
+        if(!$repositories[$entityModelName]){
+            $repositoryName = 'models\\repository\\' . $entityModelName . 'Repository';
+
+            if(!class_exists($repositoryName)) {
+                self::trace('Don`t found repository', $repositoryName);
+            }
+
+            $repositories[$entityModelName] = new $repositoryName;
+        }
+
+        return $repositories[$entityModelName];
     }
 }

@@ -2,9 +2,9 @@
 
 namespace models\repository;
 
-use core\repository\Repository;
+use core\repository\MainRepository;
 
-class ClickLinkRepository extends Repository
+class ClickLinkRepository extends MainRepository
 {
 
 }

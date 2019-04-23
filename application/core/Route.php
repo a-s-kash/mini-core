@@ -78,7 +78,7 @@ class Route
         }
 
         $ClickLink = (new ClickLink())
-            ->setMiniLinkId($miniLinkRepository->getLastId())
+            ->setMiniLinkId($miniLink->getId())
             ->setTimeFollowedOnLink(App::currentDateTime()->getTimestamp())
         ;
 

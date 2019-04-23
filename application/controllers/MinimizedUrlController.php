@@ -26,11 +26,10 @@ class MinimizedUrlController extends core\Controller
 
     public function actionStatisticsFollowing()
     {
-        d([
-            'MinimizedUrlController actionStatisticsFollowing',
-            (new MiniLinkRepository)->findAll()
-        ]);
-        $miniLinks = (new MiniLinkRepository)->findAll();
+        $miniLinks = MiniLink::repository()
+            ->find()
+            ->all()
+        ;
 
         /** @var MiniLink $miniLink */
         foreach ($miniLinks as $miniLink){
@@ -72,14 +71,15 @@ class MinimizedUrlController extends core\Controller
         $MiniLinkRepository = new MiniLinkRepository();
 
         /** @var MiniLink $miniLink */
-        if(!$miniLink = $MiniLinkRepository->findAll(["original_link = '$originalLink'"])[0]){
+        if(!$miniLink = $MiniLinkRepository->find()->where("original_link = '$originalLink'")->one()){
 
             $newMiniLinkKey = (new MinimizedUrlModel())
                 ->makeNewMinimizedKey()
             ;
 
             $miniLink = new MiniLink();
-            $MiniLinkRepository->push($miniLink
+            $MiniLinkRepository->push(
+                $miniLink
                 ->setOriginalLink($originalLink)
                 ->setMinimizedLinkKey($newMiniLinkKey)
                 ->setLifeTime($linkLifeTime->getTimestamp())

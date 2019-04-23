@@ -2,25 +2,25 @@
 
 namespace models\repository;
 
-use core\App;
-use core\repository\Repository;
 use models\entity\MiniLink;
+use core\repository\MainRepository;
 
-class MiniLinkRepository extends Repository
+class MiniLinkRepository extends MainRepository
 {
     public function findByMinimizedLinkKey(string $linkKey): ? MiniLink
     {
-        $query = $this->makeSelectQuery([
-            "minimized_link_key = '$linkKey'",
-            //'life_time > ' . App::currentDateTime()->getTimestamp()
-        ]);
+        /** @var MiniLink $miniLink */
+        $miniLink = $this->find()
+            ->where("minimized_link_key = '$linkKey'")
+            //->andWhere('life_time > ' . App::currentDateTime()->getTimestamp())
+            ->one()
+        ;
 
-        if(!$response = $this->queryOne($query)){
+        //d($miniLink);
+
+        if(!$miniLink){
             return null;
         }
-
-        /** @var MiniLink $miniLink */
-        $miniLink = $this->makeEntityModel($response);
 
         return $miniLink;
     }
